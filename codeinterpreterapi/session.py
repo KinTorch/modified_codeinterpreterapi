@@ -302,7 +302,11 @@ class CodeInterpreterSession:
         """Run code in container and send the output to the user"""
         code = code.replace('\\n', '\n').strip('\n').strip(' ').strip()
         self.show_code(code)
-        output: CodeBoxOutput = self.codebox.run(code)
+        try:
+            output: CodeBoxOutput = self.codebox.run(code, reconnection=False)
+        except Exception:
+            output: CodeBoxOutput = self.codebox.run(code, reconnection=True)
+
         self.code_log.append((code, output.content))
 
         if not isinstance(output.content, str):
