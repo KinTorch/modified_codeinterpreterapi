@@ -117,6 +117,13 @@ class CustomAgentTokenBufferMemory(BaseChatMemory):
                 curr_buffer_length = self.llm.get_num_tokens_from_messages(buffer)
 
 
+def extract_prompt(s: str) -> str:
+    # 正则表达式匹配 "Task: " 之后与 ". Please answer in language:" 之前的所有内容
+    match = re.search(r'Task: (.*?)(?=\.\s*Please answer in language:)', s)
+    
+    # 如果找到匹配，则返回匹配的内容，否则返回原始字符串
+    return match.group(1) if match else s
+
 class CodeInterpreterSession:
     def __init__(
         self,
